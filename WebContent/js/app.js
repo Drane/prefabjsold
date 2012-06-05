@@ -154,5 +154,12 @@ require(["libs/order!jquery","libs/order!libs/ps-log4js-console-ext","libs/order
 		height : 50,
 		color : 'green'
 	}));
-	
+//	console.error("test");
+//	console.error(1,2,3);
+//	console.error([1,2,3]);
+//	console.error({test : 'ok'});
+	console.debug("test");
+	console.debug(1,2,3);
+	console.debug([1,2,3]);
+	console.debug({test : 'ok'});
 });
