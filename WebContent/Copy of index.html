@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://raw.github.com/kangax/fabric.js/master/dist/all.js"></script>
+<script src="http://fabricjs.com/lib/fonts/Delicious.font.js"></script>
+</head>
+<body>
+	<canvas id="c" width="300" height="300" style="border: 1px solid #ccc"></canvas>
+	<div id="observing-events-log"
+		style="position: absolute; top: 10px; left: 315px;">
+		<strong style="margin-bottom: 10px; display: block">Observing
+			these events:</strong>
+	</div>
+	<script>
+		(function() {
+			var canvas = new fabric.Canvas('c');
+			canvas.add(new fabric.Rect({
+				top : 25,
+				left : 25,
+				width : 50,
+				height : 50,
+				fill : '#555'
+			}), new fabric.Text('A', {
+				top : 25,
+				left : 25,
+				fontFamily : 'delicious',
+				fill : '#5f5'
+			}));
+			function logObservingEvent(eventName) {
+				var el = document.getElementById('observing-events-log');
+				var para = document.createElement('p');
+				para.appendChild(document.createTextNode(eventName));
+				el.appendChild(para);
+			}
+			function observe(eventName) {
+				logObservingEvent(eventName);
+				canvas.observe(eventName, function() {
+					console.debug(eventName);
+				});
+			}
+			observe('object:modified');
+			observe('object:moving');
+			observe('object:selected');
+
+			observe('before:selection:cleared');
+			observe('selection:cleared');
+			observe('selection:created');
+
+			// observe('after:render');
+			observe('mouse:up');
+			observe('mouse:down');
+		})();
+	</script>
+</body>
+</html>

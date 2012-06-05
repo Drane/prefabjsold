@@ -1,0 +1,95 @@
+var App = Em.Application.create();
+
+App.MyView = Em.View.extend({
+	mouseDown : function() {
+		window.alert("hello world!");
+	}
+});
+/*
+App.Canvas = Em.View.extend({
+	tagName : 'canvas',
+	id : 'c'
+});
+
+var view = App.Canvas.create().append();
+console.debug(view);
+*/
+
+//var viewContext = Ember.get(view, 'element');
+//console.debug(viewContext);
+
+//var ctx = App.Canvas.getContext('2d');
+//console.debug(ctx);
+
+App.Canvas = Ember.Object.extend({
+	id : 'canvas',
+	ctx : function(){
+		var id = this.get('id');
+		return $('#'+id)[0].getContext('2d');
+	}.property('id'),
+    elementArray : [],
+    add : function(object){
+        object.set('canvas', this);
+        object.draw();
+        this.get('elementArray').pushObject(object);
+        console.debug('elementArray: '+this.get('elementArray'));
+    },
+    update : function(){
+        this.get('ctx').clearRect(0,0,$('#'+id)[0].width(),$('#'+id)[0].heigth());
+    }
+});
+
+App.Shape = Ember.Object.extend({
+    top : null,
+    left : null,
+    width : null,
+    height : null,
+    
+    canvas : null,
+    data : null,
+    hover : false,
+    hasPoint : function(x,y){
+        var ctx = this.get('canvas').emptyCtx;
+        this.path(ctx);
+        return ctx.isPointInPath(x,y);
+    },
+    draw : function(){
+        var ctx = this.get('canvas').get('ctx');
+        this.path(ctx);
+        ctx.save();
+        ctx.fillStyle = 'red';
+        ctx.fill();
+        ctx.restore();
+    }
+});
+
+App.Rect = App.Shape.extend({
+    path: function (ctx) {
+        ctx.beginPath();
+        if(this.data === null){
+            /*
+            var x1 = this.get('left')-(this.get('width')/2);
+            var x2 = this.get('left')+(this.get('width')/2);
+            var y1 = this.get('top')-(this.get('height')/2);
+            var y2 = this.get('top')+(this.get('height')/2);
+            console.debug('x1: '+x1);
+            console.debug('y1: '+y1);
+            console.debug('x2: '+x2);
+            console.debug('y2: '+y2);
+            */
+            ctx.rect.apply(ctx, [this.get('left'),this.get('top'),this.get('width'),this.get('height')]);
+            //ctx.rect.apply(ctx, [0,0,10,10]);
+        }else{
+            ctx.rect.apply(ctx, this.data);
+        }
+        ctx.closePath();
+    }
+});
+
+var canvasInstance = App.Canvas.create({
+	id : 'c'
+});
+
+//canvasInstance.get('ctx').fillRect(25,25,100,100);
+//canvasInstance.add(App.Rect.create({data : [25,25,100,100]}));
+canvasInstance.add(App.Rect.create({top: 10, left: 10, width: 100, height: 50}));
