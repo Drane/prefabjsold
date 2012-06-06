@@ -1,0 +1,6 @@
+entity --class ~.log.Log --testAutomatically
+field string logLevel
+field string logMessage --sizeMax 2048
+field boolean active
+field date --fieldName createDate --type java.util.Date
+field date --fieldName updateDate --type java.util.Date
